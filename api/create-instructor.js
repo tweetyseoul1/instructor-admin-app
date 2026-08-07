@@ -1,67 +1,9 @@
-// Vercel Serverless Function.
-// Creates (invites) a new instructor account. Only callable by an authenticated admin.
-// Requires env vars (set in Vercel project settings, never in client code):
-//   SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY
-
-const { createClient } = require("@supabase/supabase-js");
-
-module.exports = async function handler(req, res) {
-  if (req.method !== "POST") {
-    res.status(405).json({ error: "Method not allowed" });
-    return;
-  }
-
-  const authHeader = req.headers.authorization || "";
-  const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
-  if (!token) {
-    res.status(401).json({ error: "로그인이 필요합니다." });
-    return;
-  }
-
-  const url = process.env.SUPABASE_URL;
-  const anonKey = process.env.SUPABASE_ANON_KEY;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !anonKey || !serviceKey) {
-    res.status(500).json({ error: "서버 환경변수(SUPABASE_URL / SUPABASE_ANON_KEY / SUPABASE_SERVICE_ROLE_KEY)가 설정되지 않았습니다." });
-    return;
-  }
-
-  const authClient = createClient(url, anonKey);
-  const { data: userData, error: userErr } = await authClient.auth.getUser(token);
-  if (userErr || !userData || !userData.user) {
-    res.status(401).json({ error: "유효하지 않은 세션입니다." });
-    return;
-  }
-
-  const adminClient = createClient(url, serviceKey, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  });
-
-  const { data: callerProfile, error: profileErr } = await adminClient
-    .from("profiles")
-    .select("role")
-    .eq("id", userData.user.id)
-    .single();
-
-  if (profileErr || !callerProfile || callerProfile.role !== "admin") {
-    res.status(403).json({ error: "관리자만 강사 계정을 생성할 수 있습니다." });
-    return;
-  }
-
-  const { email, name } = req.body || {};
-  if (!email || !name) {
-    res.status(400).json({ error: "이메일과 이름을 입력해주세요." });
-    return;
-  }
-
-  const { data: invited, error: inviteErr } = await adminClient.auth.admin.inviteUserByEmail(email, {
-    data: { name, role: "instructor" },
-  });
-
-  if (inviteErr) {
-    res.status(400).json({ error: inviteErr.message });
-    return;
-  }
-
-  res.status(200).json({ ok: true, userId: invited.user ? invited.user.id : null });
-};
+const {createClient}=require('@supabase/supabase-js');
+module.exports=async(req,res)=>{if(req.method!=='POST')return res.status(405).json({error:'POST 요청만 허용됩니다.'});
+ const token=(req.headers.authorization||'').replace('Bearer ','');if(!token)return res.status(401).json({error:'로그인이 필요합니다.'});
+ const {SUPABASE_URL:url,SUPABASE_ANON_KEY:anon,SUPABASE_SERVICE_ROLE_KEY:service}=process.env;if(!url||!anon||!service)return res.status(500).json({error:'서버 환경변수가 설정되지 않았습니다.'});
+ const auth=createClient(url,anon),admin=createClient(url,service,{auth:{persistSession:false}});const {data:u,error:ue}=await auth.auth.getUser(token);if(ue||!u.user)return res.status(401).json({error:'유효하지 않은 로그인입니다.'});
+ const {data:p}=await admin.from('profiles').select('role').eq('id',u.user.id).single();if(p?.role!=='admin')return res.status(403).json({error:'운영자만 강사를 등록할 수 있습니다.'});
+ const {name,email,phone,bankName,bankAccount,accountHolder}=req.body||{};if(!name||!email||!bankName||!bankAccount||!accountHolder)return res.status(400).json({error:'필수 정보를 모두 입력해 주세요.'});
+ const {data:invited,error}=await admin.auth.admin.inviteUserByEmail(email,{data:{name,role:'instructor'}});if(error)return res.status(400).json({error:error.message});
+ await admin.from('profiles').upsert({id:invited.user.id,email,name,phone,role:'instructor',bank_name:bankName,bank_account:bankAccount,account_holder:accountHolder});return res.json({ok:true});};
