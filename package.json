@@ -1,10 +1,9 @@
 {
-  "name": "instructor-admin-app",
-  "version": "1.0.0",
+  "name": "baeumon-education-admin",
+  "version": "2.0.0",
   "private": true,
-  "description": "2급자격과정 강사행정 시스템 (교육신고서 / 수료증신청서 / 관리자확인페이지)",
-  "dependencies": {
-    "@supabase/supabase-js": "^2.45.0",
-    "googleapis": "^140.0.0"
-  }
+  "description": "강사 교육신고 및 수료·자격증 신청 통합 홈페이지",
+  "scripts": { "start": "npx serve . -l 4173" },
+  "dependencies": { "@supabase/supabase-js": "^2.45.0", "googleapis": "^140.0.0" },
+  "devDependencies": { "serve": "^14.2.4" }
 }
