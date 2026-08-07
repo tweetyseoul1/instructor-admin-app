@@ -7,17 +7,814 @@
 <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-<main class="narrow" style="padding-top:100px; text-align:center;">
-  <div class="loading">이동 중...</div>
+<header class="site" id="site-header"></header>
+
+<main>
+
+  <!-- ============ 로그인 ============ -->
+  <section id="view-login" class="view">
+    <div class="card" style="max-width:440px; margin:0 auto;">
+      <div class="card-head" style="border-bottom:none; padding-bottom:0; margin-bottom:18px;">
+        <div>
+          <span class="eyebrow">로그인</span>
+          <h1>2급자격과정 강사행정</h1>
+          <p>강사 · 운영자 계정으로 로그인하세요.</p>
+        </div>
+      </div>
+
+      <div id="login-msg" class="msg"></div>
+
+      <form id="login-form">
+        <div class="field-grid single">
+          <div class="field"><label>이메일</label><input type="email" id="login-email" required autocomplete="username"></div>
+          <div class="field"><label>비밀번호</label><input type="password" id="login-password" required autocomplete="current-password"></div>
+        </div>
+        <div class="btn-row">
+          <button type="submit" class="btn primary" id="login-btn">로그인</button>
+          <button type="button" class="btn ghost" id="forgot-toggle">비밀번호를 잊으셨나요?</button>
+        </div>
+      </form>
+
+      <form id="forgot-form" style="display:none; margin-top:26px; padding-top:22px; border-top:1px solid var(--line);">
+        <div class="field-grid single">
+          <div class="field"><label>재설정 링크를 받을 이메일</label><input type="email" id="forgot-email" required></div>
+        </div>
+        <div class="btn-row">
+          <button type="submit" class="btn primary">재설정 링크 보내기</button>
+          <button type="button" class="btn ghost" id="forgot-cancel">취소</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ 비밀번호 재설정 ============ -->
+  <section id="view-reset" class="view">
+    <div class="card" style="max-width:440px; margin:0 auto;">
+      <div class="card-head" style="border-bottom:none; padding-bottom:0; margin-bottom:18px;">
+        <div>
+          <span class="eyebrow">비밀번호 재설정</span>
+          <h1>새 비밀번호 설정</h1>
+          <p>이메일로 받은 링크를 통해 접속하셨습니다. 새 비밀번호를 입력해주세요.</p>
+        </div>
+      </div>
+      <div id="reset-msg" class="msg"></div>
+      <form id="reset-form">
+        <div class="field-grid single">
+          <div class="field"><label>새 비밀번호 (6자 이상)</label><input type="password" id="reset-password" minlength="6" required autocomplete="new-password"></div>
+          <div class="field"><label>새 비밀번호 확인</label><input type="password" id="reset-password2" minlength="6" required autocomplete="new-password"></div>
+        </div>
+        <div class="btn-row">
+          <button type="submit" class="btn primary" id="reset-btn">비밀번호 변경</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ 수료증·자격증 신청서 (공개) ============ -->
+  <section id="view-certificate" class="view active">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <span class="eyebrow">서식 제2호</span>
+          <h1>수료증·자격증 신청서</h1>
+          <p>강의 종료 후 수강생이 수료증 또는 1·2급 자격증 발급을 신청하기 위한 서식입니다. 로그인 없이 제출하실 수 있습니다.</p>
+        </div>
+      </div>
+
+      <div id="cr-msg" class="msg"></div>
+
+      <form id="cert-form">
+        <div class="section-label"><span class="bar"></span><span>1. 신청자(수강생) 정보</span></div>
+        <div class="field-grid">
+          <div class="field"><label>성명<span class="req">*</span></label><input id="cr-name" type="text" required></div>
+          <div class="field"><label>생년월일</label><input id="cr-dob" type="date"></div>
+          <div class="field"><label>연락처<span class="req">*</span></label><input id="cr-phone" type="tel" placeholder="010-0000-0000" required></div>
+          <div class="field"><label>이메일</label><input id="cr-email" type="email"></div>
+          <div class="field span2"><label>주소</label><input id="cr-address" type="text"></div>
+        </div>
+
+        <div class="section-label"><span class="bar"></span><span>2. 교육과정 정보</span></div>
+        <div class="field-grid">
+          <div class="field span2"><label>과정명</label><input id="cr-course" type="text"></div>
+          <div class="field"><label>수료일자</label><input id="cr-complete" type="date"></div>
+          <div class="field"><label>총 교육시간(시간)</label><input id="cr-hours" type="number" min="0"></div>
+        </div>
+
+        <div class="section-label"><span class="bar"></span><span>3. 신청 정보</span></div>
+        <div class="field-grid">
+          <div class="field">
+            <label>신청종류<span class="req">*</span></label>
+            <select id="cr-request-type" required>
+              <option value="" disabled selected>선택하세요</option>
+              <option value="수료증">수료증 신청</option>
+              <option value="1급 자격증">1급 자격증 신청</option>
+              <option value="2급 자격증">2급 자격증 신청</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>신청구분<span class="req">*</span></label>
+            <select id="cr-type" required>
+              <option value="" disabled selected>선택하세요</option>
+              <option value="신규">신규</option>
+              <option value="재발급">재발급</option>
+            </select>
+          </div>
+          <div class="field span2">
+            <label>담당 강사(어느 강사에게 수업을 받으셨나요?)<span class="req">*</span></label>
+            <select id="cr-instructor" required><option value="" disabled selected>선택하세요</option></select>
+          </div>
+          <div class="field" id="cr-payment-date-wrap" style="display:none;">
+            <label>자격증비 입금일자</label>
+            <input id="cr-payment-date" type="date">
+            <span class="hint">1·2급 자격증 신청 시에만 입력합니다.</span>
+          </div>
+        </div>
+
+        <div class="sign-row">
+          <div class="field"><label>신청일자</label><input id="cr-apply-date" type="date" required></div>
+          <div class="field"><label>신청인(성명)</label><input id="cr-applicant" type="text" required></div>
+        </div>
+
+        <div class="btn-row">
+          <button type="submit" class="btn primary" id="cr-submit-btn">신청서 제출</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ 교육신고서 (강사) ============ -->
+  <section id="view-report" class="view">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <span class="eyebrow">서식 제1호</span>
+          <h1>2급자격과정 교육신고서</h1>
+          <p>강사가 2급자격과정 개설을 신고하기 위한 서식입니다. 제출한 내용은 관리자 확인페이지에서 조회됩니다.</p>
+        </div>
+      </div>
+
+      <div id="rep-msg" class="msg"></div>
+
+      <form id="report-form">
+        <div class="section-label"><span class="bar"></span><span>1. 신고자(강사) 정보</span></div>
+        <div class="field-grid">
+          <div class="field"><label>성명<span class="req">*</span></label><input id="rep-name" type="text" required></div>
+          <div class="field"><label>생년월일</label><input id="rep-dob" type="date"></div>
+          <div class="field"><label>연락처<span class="req">*</span></label><input id="rep-phone" type="tel" placeholder="010-0000-0000" required></div>
+          <div class="field"><label>이메일</label><input id="rep-email" type="email"></div>
+        </div>
+
+        <div class="section-label"><span class="bar"></span><span>2. 교육과정 정보</span></div>
+        <div class="field-grid">
+          <div class="field span2"><label>과정명<span class="req">*</span></label><input id="rep-course" type="text" required></div>
+          <div class="field"><label>교육기간(시작)</label><input id="rep-start" type="date"></div>
+          <div class="field"><label>교육기간(종료)</label><input id="rep-end" type="date"></div>
+          <div class="field"><label>총 교육시간(시간)</label><input id="rep-hours" type="number" min="0"></div>
+        </div>
+
+        <div class="section-label"><span class="bar"></span><span>3. 모집 정보</span></div>
+        <div class="field-grid">
+          <div class="field"><label>모집인원(명)</label><input id="rep-capacity" type="number" min="0"></div>
+          <div class="field"><label>수강료(원)</label><input id="rep-tuition" type="number" min="0"></div>
+        </div>
+
+        <div class="section-label"><span class="bar"></span><span>4. 교안 첨부</span></div>
+        <div class="field-grid single">
+          <div class="field">
+            <label>교안 파일</label>
+            <input id="rep-syllabus" type="file" accept=".pdf,.ppt,.pptx,.doc,.docx,.hwp,.hwpx">
+            <span class="hint">PDF, PPT, Word, 한글 파일을 첨부할 수 있습니다.</span>
+          </div>
+        </div>
+
+        <div class="sign-row">
+          <div class="field"><label>신고일자</label><input id="rep-report-date" type="date" required></div>
+        </div>
+
+        <div class="btn-row">
+          <button type="submit" class="btn primary" id="rep-submit-btn">교육신고서 제출</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card" style="margin-top:24px;">
+      <div class="section-label" style="margin-top:0;"><span class="bar"></span><span>최근 제출 내역</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>과정명</th><th>교육기간</th><th>총시간</th><th>모집인원</th><th>수강료</th><th>교안</th><th>신고일자</th></tr></thead>
+          <tbody id="rep-history-body"></tbody>
+        </table>
+      </div>
+      <div id="rep-history-empty" class="empty" style="display:none;">아직 제출한 교육신고서가 없습니다.</div>
+    </div>
+  </section>
+
+  <!-- ============ 관리자 확인페이지 ============ -->
+  <section id="view-admin" class="view">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <span class="eyebrow">서식 제3호</span>
+          <h1 id="adm-page-title">관리자 확인페이지</h1>
+          <p id="adm-page-desc">수료증·자격증 신청 현황과 교육신고 현황을 확인합니다.</p>
+        </div>
+      </div>
+
+      <div id="adm-msg" class="msg"></div>
+
+      <div class="subtabs" id="adm-subtabs">
+        <button data-panel="adm-panel-cert" class="active">수료증·자격증 신청 현황</button>
+        <button data-panel="adm-panel-edu">교육신고 현황</button>
+        <button data-panel="adm-panel-instructors" id="adm-tab-instructors" style="display:none;">강사 계정 관리</button>
+      </div>
+
+      <!-- 수료증·자격증 신청 현황 -->
+      <section id="adm-panel-cert" class="subpanel active">
+        <div class="chip-row">
+          <div class="chip"><div class="k">총 신청</div><div class="v" id="adm-chip-total">0</div></div>
+          <div class="chip"><div class="k">신청중</div><div class="v" id="adm-chip-pending">0</div></div>
+          <div class="chip"><div class="k">발급완료</div><div class="v" id="adm-chip-issued">0</div></div>
+        </div>
+
+        <div class="filter-row">
+          <div class="field" id="adm-filter-instructor-wrap">
+            <label>강사 이름 검색</label>
+            <input id="adm-filter-instructor" type="text" placeholder="강사 이름 입력">
+          </div>
+          <div class="field">
+            <label>신청종류</label>
+            <select id="adm-filter-level">
+              <option value="">전체</option>
+              <option value="수료증">수료증</option>
+              <option value="1급 자격증">1급 자격증</option>
+              <option value="2급 자격증">2급 자격증</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>상태</label>
+            <select id="adm-filter-status">
+              <option value="">전체</option>
+              <option value="신청">신청중</option>
+              <option value="발급완료">발급완료</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>성명</th><th>연락처</th><th>과정명</th><th>신청종류</th><th>신청구분</th>
+                <th>담당강사</th><th>자격증비 입금일자</th><th>신청일자</th><th>상태</th><th>발급일자</th><th>비고</th>
+              </tr>
+            </thead>
+            <tbody id="adm-cert-body"></tbody>
+          </table>
+        </div>
+        <div id="adm-cert-empty" class="empty" style="display:none;">해당하는 신청 내역이 없습니다.</div>
+        <div id="adm-cert-loading" class="loading" style="display:none;">불러오는 중...</div>
+      </section>
+
+      <!-- 교육신고 현황 -->
+      <section id="adm-panel-edu" class="subpanel">
+        <div class="filter-row">
+          <div class="field" id="adm-edu-filter-instructor-wrap">
+            <label>강사 이름 검색</label>
+            <input id="adm-edu-filter-instructor" type="text" placeholder="강사 이름 입력">
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>강사명</th><th>과정명</th><th>교육기간</th><th>총시간</th><th>모집인원</th><th>수강료</th><th>교안</th><th>신고일자</th></tr>
+            </thead>
+            <tbody id="adm-edu-body"></tbody>
+          </table>
+        </div>
+        <div id="adm-edu-empty" class="empty" style="display:none;">교육신고 내역이 없습니다.</div>
+        <div id="adm-edu-loading" class="loading" style="display:none;">불러오는 중...</div>
+      </section>
+
+      <!-- 강사 계정 관리 (admin only) -->
+      <section id="adm-panel-instructors" class="subpanel">
+        <div class="section-label" style="margin-top:0;"><span class="bar"></span><span>강사 계정 추가</span></div>
+        <div id="adm-invite-msg" class="msg"></div>
+        <form id="adm-invite-form">
+          <div class="field-grid">
+            <div class="field"><label>이메일<span class="req">*</span></label><input id="adm-inv-email" type="email" required></div>
+            <div class="field"><label>이름<span class="req">*</span></label><input id="adm-inv-name" type="text" required></div>
+          </div>
+          <div class="btn-row">
+            <button type="submit" class="btn primary" id="adm-invite-btn">초대 메일 보내기</button>
+          </div>
+        </form>
+
+        <div class="section-label"><span class="bar"></span><span>등록된 강사 목록</span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>이름</th><th>이메일</th><th>가입일</th></tr></thead>
+            <tbody id="adm-instructors-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </section>
+
 </main>
+
+<footer class="site">2급자격과정 강사행정 시스템 — 표시되는 데이터 범위는 로그인 계정 권한(RLS)에 따라 자동으로 제한됩니다.</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="js/config.js"></script>
 <script src="js/supabaseClient.js"></script>
 <script>
-(async function(){
+let currentUser = null;
+let currentProfile = null;
+let certLoaded = false, reportLoaded = false, adminLoaded = false;
+
+function showMsg(el, text, kind){ el.textContent = text; el.className = "msg show " + (kind || "error"); }
+function hideMsg(el){ el.className = "msg"; }
+function fmtDate(d){ return d || "-"; }
+
+async function getProfile(userId){
+  const { data, error } = await sb.from("profiles").select("id, email, name, role").eq("id", userId).single();
+  return error ? null : data;
+}
+
+async function refreshAuthState(){
   const { data } = await sb.auth.getSession();
-  window.location.href = data.session ? "admin.html" : "login.html";
+  currentUser = data.session ? data.session.user : null;
+  currentProfile = currentUser ? await getProfile(currentUser.id) : null;
+  renderNav();
+}
+
+function renderNav(){
+  const el = document.getElementById("site-header");
+  const loggedIn = !!currentUser;
+  const isAdmin = currentProfile && currentProfile.role === "admin";
+  el.innerHTML = `
+    <div class="site-inner">
+      <a href="#" class="wordmark" onclick="showView('certificate'); return false;">
+        <span class="mark">2급</span>
+        <span class="text">
+          <span class="name">2급자격과정 강사행정</span>
+          <span class="tag">교육신고 · 수료증·자격증 · 관리 통합 시스템</span>
+        </span>
+      </a>
+      <nav class="tabs">
+        <a href="#" data-view="certificate" onclick="showView('certificate'); return false;">수료증·자격증 신청</a>
+        ${loggedIn ? `<a href="#" data-view="report" onclick="showView('report'); return false;">교육신고서</a>` : ""}
+        ${loggedIn ? `<a href="#" data-view="admin" onclick="showView('admin'); return false;">관리자 확인페이지</a>` : ""}
+        ${loggedIn
+          ? `<span class="who">${(currentProfile && (currentProfile.name || currentProfile.email)) || ""}${isAdmin ? " · 운영자" : " · 강사"}</span><button class="btn ghost" onclick="doLogout()">로그아웃</button>`
+          : `<a href="#" data-view="login" onclick="showView('login'); return false;">로그인</a>`
+        }
+      </nav>
+    </div>
+  `;
+}
+
+function showView(name){
+  if ((name === "report" || name === "admin") && !currentUser) name = "login";
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.getElementById("view-" + name).classList.add("active");
+  document.querySelectorAll("nav.tabs [data-view]").forEach(el => el.classList.remove("active"));
+  const navEl = document.querySelector(`nav.tabs [data-view="${name}"]`);
+  if (navEl) navEl.classList.add("active");
+
+  if (name === "report") { prefillReport(); loadReportHistory(); }
+  if (name === "admin") { setupAdminView(); }
+}
+
+async function doLogout(){
+  await sb.auth.signOut();
+  currentUser = null; currentProfile = null;
+  reportLoaded = false; adminLoaded = false;
+  renderNav();
+  showView("certificate");
+}
+
+// ================= 로그인 / 비밀번호 재설정 =================
+document.getElementById("forgot-toggle").addEventListener("click", () => {
+  document.getElementById("login-form").style.display = "none";
+  document.getElementById("forgot-form").style.display = "block";
+  hideMsg(document.getElementById("login-msg"));
+});
+document.getElementById("forgot-cancel").addEventListener("click", () => {
+  document.getElementById("forgot-form").style.display = "none";
+  document.getElementById("login-form").style.display = "block";
+  hideMsg(document.getElementById("login-msg"));
+});
+
+document.getElementById("login-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const msg = document.getElementById("login-msg");
+  hideMsg(msg);
+  const btn = document.getElementById("login-btn");
+  btn.disabled = true; btn.textContent = "로그인 중...";
+  const email = document.getElementById("login-email").value.trim();
+  const password = document.getElementById("login-password").value;
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  btn.disabled = false; btn.textContent = "로그인";
+  if (error) { showMsg(msg, "로그인 실패: 이메일 또는 비밀번호를 확인해주세요.", "error"); return; }
+  await refreshAuthState();
+  showView("admin");
+});
+
+document.getElementById("forgot-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const msg = document.getElementById("login-msg");
+  hideMsg(msg);
+  const email = document.getElementById("forgot-email").value.trim();
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + window.location.pathname });
+  if (error) { showMsg(msg, "재설정 링크 발송에 실패했습니다: " + error.message, "error"); return; }
+  showMsg(msg, "입력하신 이메일로 재설정 링크를 보냈습니다. 메일함을 확인해주세요.", "success");
+  document.getElementById("forgot-form").style.display = "none";
+  document.getElementById("login-form").style.display = "block";
+});
+
+document.getElementById("reset-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const msg = document.getElementById("reset-msg");
+  hideMsg(msg);
+  const p1 = document.getElementById("reset-password").value;
+  const p2 = document.getElementById("reset-password2").value;
+  if (p1 !== p2) { showMsg(msg, "두 비밀번호가 일치하지 않습니다.", "error"); return; }
+  const btn = document.getElementById("reset-btn");
+  btn.disabled = true; btn.textContent = "변경 중...";
+  const { error } = await sb.auth.updateUser({ password: p1 });
+  btn.disabled = false; btn.textContent = "비밀번호 변경";
+  if (error) { showMsg(msg, "변경 실패: " + error.message, "error"); return; }
+  showMsg(msg, "비밀번호가 변경되었습니다. 잠시 후 로그인 화면으로 이동합니다.", "success");
+  await sb.auth.signOut();
+  currentUser = null; currentProfile = null;
+  setTimeout(() => { renderNav(); showView("login"); }, 1800);
+});
+
+sb.auth.onAuthStateChange((event) => {
+  if (event === "PASSWORD_RECOVERY") showView("reset");
+});
+
+// ================= 수료증·자격증 신청서 (공개) =================
+async function initCertificateForm(){
+  document.getElementById("cr-apply-date").value = new Date().toISOString().slice(0, 10);
+
+  const requestTypeSelect = document.getElementById("cr-request-type");
+  const paymentDateWrap = document.getElementById("cr-payment-date-wrap");
+  requestTypeSelect.addEventListener("change", () => {
+    const isCert = requestTypeSelect.value === "1급 자격증" || requestTypeSelect.value === "2급 자격증";
+    paymentDateWrap.style.display = isCert ? "" : "none";
+    if (!isCert) document.getElementById("cr-payment-date").value = "";
+  });
+
+  const instructorSelect = document.getElementById("cr-instructor");
+  const { data: instructors } = await sb.from("instructor_directory").select("id, name").order("name");
+  (instructors || []).forEach(i => {
+    const opt = document.createElement("option");
+    opt.value = i.id; opt.textContent = i.name;
+    instructorSelect.appendChild(opt);
+  });
+
+  document.getElementById("cert-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById("cr-msg");
+    hideMsg(msg);
+    const submitBtn = document.getElementById("cr-submit-btn");
+    submitBtn.disabled = true; submitBtn.textContent = "제출 중...";
+
+    const row = {
+      student_name: document.getElementById("cr-name").value.trim(),
+      student_dob: document.getElementById("cr-dob").value || null,
+      student_phone: document.getElementById("cr-phone").value.trim(),
+      student_email: document.getElementById("cr-email").value.trim() || null,
+      student_address: document.getElementById("cr-address").value.trim() || null,
+      course_name: document.getElementById("cr-course").value.trim() || null,
+      completion_date: document.getElementById("cr-complete").value || null,
+      total_hours: document.getElementById("cr-hours").value || null,
+      request_type: document.getElementById("cr-request-type").value,
+      application_type: document.getElementById("cr-type").value,
+      instructor_id: document.getElementById("cr-instructor").value,
+      payment_date: document.getElementById("cr-payment-date").value || null,
+      application_date: document.getElementById("cr-apply-date").value,
+      applicant_name: document.getElementById("cr-applicant").value.trim(),
+    };
+
+    const { error } = await sb.from("certificate_requests").insert(row);
+    submitBtn.disabled = false; submitBtn.textContent = "신청서 제출";
+    if (error) { showMsg(msg, "제출 실패: " + error.message, "error"); return; }
+    showMsg(msg, "신청이 접수되었습니다. 담당 강사 확인 후 처리됩니다.", "success");
+    document.getElementById("cert-form").reset();
+    document.getElementById("cr-apply-date").value = new Date().toISOString().slice(0, 10);
+    paymentDateWrap.style.display = "none";
+  });
+}
+
+// ================= 교육신고서 =================
+function prefillReport(){
+  document.getElementById("rep-name").value = (currentProfile && currentProfile.name) || "";
+  document.getElementById("rep-email").value = (currentProfile && currentProfile.email) || "";
+  if (!document.getElementById("rep-report-date").value) {
+    document.getElementById("rep-report-date").value = new Date().toISOString().slice(0, 10);
+  }
+}
+
+async function loadReportHistory(){
+  const body = document.getElementById("rep-history-body");
+  const empty = document.getElementById("rep-history-empty");
+  const { data, error } = await sb
+    .from("education_reports")
+    .select("course_name, period_start, period_end, total_hours, capacity, tuition, syllabus_path, report_date")
+    .eq("instructor_id", currentUser.id)
+    .order("created_at", { ascending: false });
+
+  if (error || !data || data.length === 0) {
+    body.innerHTML = "";
+    empty.style.display = "block";
+    return;
+  }
+  empty.style.display = "none";
+  body.innerHTML = data.map(r => `
+    <tr>
+      <td>${r.course_name || "-"}</td>
+      <td>${fmtDate(r.period_start)} ~ ${fmtDate(r.period_end)}</td>
+      <td>${r.total_hours ?? "-"}</td>
+      <td>${r.capacity ?? "-"}</td>
+      <td>${r.tuition != null ? Number(r.tuition).toLocaleString("ko-KR") + "원" : "-"}</td>
+      <td>${r.syllabus_path ? "첨부됨" : "-"}</td>
+      <td>${fmtDate(r.report_date)}</td>
+    </tr>
+  `).join("");
+}
+
+document.getElementById("report-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const msg = document.getElementById("rep-msg");
+  hideMsg(msg);
+  const submitBtn = document.getElementById("rep-submit-btn");
+  submitBtn.disabled = true; submitBtn.textContent = "제출 중...";
+
+  try {
+    let syllabusPath = null;
+    const file = document.getElementById("rep-syllabus").files[0];
+    if (file) {
+      const path = `${currentUser.id}/${Date.now()}-${file.name}`;
+      const { error: upErr } = await sb.storage.from("syllabus").upload(path, file);
+      if (upErr) throw upErr;
+      syllabusPath = path;
+    }
+
+    const row = {
+      instructor_id: currentUser.id,
+      course_name: document.getElementById("rep-course").value.trim(),
+      period_start: document.getElementById("rep-start").value || null,
+      period_end: document.getElementById("rep-end").value || null,
+      total_hours: document.getElementById("rep-hours").value || null,
+      capacity: document.getElementById("rep-capacity").value || null,
+      tuition: document.getElementById("rep-tuition").value || null,
+      syllabus_path: syllabusPath,
+      report_date: document.getElementById("rep-report-date").value,
+    };
+    const { error } = await sb.from("education_reports").insert(row);
+    if (error) throw error;
+
+    let sheetNote = "";
+    try {
+      const { data: sessionData } = await sb.auth.getSession();
+      const sheetRes = await fetch("/api/log-report-to-sheet", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: "Bearer " + sessionData.session.access_token },
+        body: JSON.stringify({
+          instructorName: (currentProfile && currentProfile.name) || document.getElementById("rep-name").value,
+          courseName: row.course_name,
+          periodStart: row.period_start,
+          periodEnd: row.period_end,
+          totalHours: row.total_hours,
+          capacity: row.capacity,
+          tuition: row.tuition,
+          syllabusFilename: file ? file.name : "",
+          reportDate: row.report_date,
+        }),
+      });
+      if (!sheetRes.ok) sheetNote = " (구글시트 기록은 실패했지만 신고서 제출은 완료되었습니다)";
+    } catch (sheetErr) {
+      sheetNote = " (구글시트 기록은 실패했지만 신고서 제출은 완료되었습니다)";
+    }
+
+    showMsg(msg, "교육신고서가 제출되었습니다." + sheetNote, "success");
+    document.getElementById("report-form").reset();
+    prefillReport();
+    loadReportHistory();
+  } catch (err) {
+    showMsg(msg, "제출 실패: " + (err.message || err), "error");
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "교육신고서 제출";
+  }
+});
+
+// ================= 관리자 확인페이지 =================
+let certRows = [], eduRows = [];
+
+function setupAdminView(){
+  const isAdmin = currentProfile && currentProfile.role === "admin";
+  document.getElementById("adm-page-title").textContent = isAdmin ? "관리자 확인페이지" : "내 수강생 확인페이지";
+  document.getElementById("adm-page-desc").textContent = isAdmin
+    ? "전체 강사의 수료증·자격증 신청·교육신고 현황을 총괄 확인하고 발급 상태를 관리합니다."
+    : "내가 담당한 수강생의 신청 현황과 내가 제출한 교육신고 내역을 확인합니다.";
+  document.getElementById("adm-tab-instructors").style.display = isAdmin ? "" : "none";
+  document.getElementById("adm-filter-instructor-wrap").style.display = isAdmin ? "" : "none";
+  document.getElementById("adm-edu-filter-instructor-wrap").style.display = isAdmin ? "" : "none";
+
+  if (!adminLoaded) {
+    adminLoaded = true;
+    document.querySelectorAll("#adm-subtabs button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#adm-subtabs button").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll("#view-admin .subpanel").forEach(p => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.panel).classList.add("active");
+      });
+    });
+    document.getElementById("adm-filter-instructor").addEventListener("input", renderCertTable);
+    document.getElementById("adm-filter-level").addEventListener("change", renderCertTable);
+    document.getElementById("adm-filter-status").addEventListener("change", renderCertTable);
+    document.getElementById("adm-edu-filter-instructor").addEventListener("input", renderEduTable);
+
+    if (isAdmin) {
+      document.getElementById("adm-invite-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const invMsg = document.getElementById("adm-invite-msg");
+        hideMsg(invMsg);
+        const btn = document.getElementById("adm-invite-btn");
+        btn.disabled = true; btn.textContent = "처리 중...";
+        const email = document.getElementById("adm-inv-email").value.trim();
+        const name = document.getElementById("adm-inv-name").value.trim();
+        const { data: sessionData } = await sb.auth.getSession();
+        const token = sessionData.session.access_token;
+        try {
+          const res = await fetch("/api/create-instructor", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+            body: JSON.stringify({ email, name }),
+          });
+          const result = await res.json();
+          if (!res.ok) throw new Error(result.error || "요청 실패");
+          showMsg(invMsg, `${email}로 초대 메일을 보냈습니다.`, "success");
+          document.getElementById("adm-invite-form").reset();
+          loadInstructors();
+        } catch (err) {
+          showMsg(invMsg, "실패: " + err.message, "error");
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "초대 메일 보내기";
+        }
+      });
+    }
+  }
+
+  loadCertRequests();
+  loadEducationReports();
+  if (isAdmin) loadInstructors();
+}
+
+async function loadCertRequests(){
+  document.getElementById("adm-cert-loading").style.display = "block";
+  const { data, error } = await sb
+    .from("certificate_requests")
+    .select("*, profiles:instructor_id(name)")
+    .order("created_at", { ascending: false });
+  document.getElementById("adm-cert-loading").style.display = "none";
+  certRows = error ? [] : (data || []);
+  renderCertTable();
+}
+
+function renderCertTable(){
+  const isAdmin = currentProfile && currentProfile.role === "admin";
+  const nameFilter = (document.getElementById("adm-filter-instructor").value || "").trim().toLowerCase();
+  const levelVal = document.getElementById("adm-filter-level").value;
+  const statusVal = document.getElementById("adm-filter-status").value;
+
+  let rows = certRows.filter(r => {
+    if (nameFilter && !((r.profiles && r.profiles.name) || "").toLowerCase().includes(nameFilter)) return false;
+    if (levelVal && r.request_type !== levelVal) return false;
+    if (statusVal && r.status !== statusVal) return false;
+    return true;
+  });
+
+  document.getElementById("adm-chip-total").textContent = rows.length;
+  document.getElementById("adm-chip-pending").textContent = rows.filter(r => r.status === "신청").length;
+  document.getElementById("adm-chip-issued").textContent = rows.filter(r => r.status === "발급완료").length;
+
+  const body = document.getElementById("adm-cert-body");
+  const empty = document.getElementById("adm-cert-empty");
+  if (rows.length === 0) { body.innerHTML = ""; empty.style.display = "block"; return; }
+  empty.style.display = "none";
+
+  const groupOrder = ["수료증", "1급 자격증", "2급 자격증"];
+  const groups = {};
+  rows.forEach(r => { const key = r.request_type || "미지정"; (groups[key] = groups[key] || []).push(r); });
+
+  let html = "";
+  Object.keys(groups).sort((a, b) => groupOrder.indexOf(a) - groupOrder.indexOf(b)).forEach(level => {
+    html += `<tr><td colspan="11" style="background:var(--surface-2); font-weight:700; font-size:12.5px; color:var(--accent);">신청종류: ${level} (${groups[level].length}건)</td></tr>`;
+    groups[level].forEach(r => {
+      const on = r.status === "발급완료";
+      html += `
+        <tr>
+          <td>${r.student_name || "-"}</td>
+          <td>${r.student_phone || "-"}</td>
+          <td>${r.course_name || "-"}</td>
+          <td>${r.request_type || "-"}</td>
+          <td>${r.application_type || "-"}</td>
+          <td>${(r.profiles && r.profiles.name) || "-"}</td>
+          <td>${fmtDate(r.payment_date)}</td>
+          <td>${fmtDate(r.application_date)}</td>
+          <td>
+            <span class="status-pill ${on ? "on" : ""} ${isAdmin ? "clickable" : ""}" data-id="${r.id}" data-on="${on}">
+              <span class="dot"></span><span>${on ? "발급완료" : "신청중"}</span>
+            </span>
+          </td>
+          <td>${fmtDate(r.issued_date)}</td>
+          <td>${r.note || "-"}</td>
+        </tr>
+      `;
+    });
+  });
+  body.innerHTML = html;
+
+  if (isAdmin) {
+    body.querySelectorAll(".status-pill.clickable").forEach(pill => {
+      pill.addEventListener("click", async () => {
+        const id = pill.dataset.id;
+        const currentlyOn = pill.dataset.on === "true";
+        const patch = currentlyOn
+          ? { status: "신청", issued_date: null }
+          : { status: "발급완료", issued_date: new Date().toISOString().slice(0, 10) };
+        const { error } = await sb.from("certificate_requests").update(patch).eq("id", id);
+        if (!error) loadCertRequests();
+      });
+    });
+  }
+}
+
+async function loadEducationReports(){
+  document.getElementById("adm-edu-loading").style.display = "block";
+  const { data, error } = await sb
+    .from("education_reports")
+    .select("*, profiles:instructor_id(name)")
+    .order("created_at", { ascending: false });
+  document.getElementById("adm-edu-loading").style.display = "none";
+  eduRows = error ? [] : (data || []);
+  renderEduTable();
+}
+
+async function downloadSyllabus(path){
+  const { data, error } = await sb.storage.from("syllabus").createSignedUrl(path, 60);
+  if (!error && data) window.open(data.signedUrl, "_blank");
+}
+window.downloadSyllabus = downloadSyllabus;
+
+function renderEduTable(){
+  const nameFilter = (document.getElementById("adm-edu-filter-instructor").value || "").trim().toLowerCase();
+  const rows = eduRows.filter(r => {
+    if (nameFilter && !((r.profiles && r.profiles.name) || "").toLowerCase().includes(nameFilter)) return false;
+    return true;
+  });
+  const body = document.getElementById("adm-edu-body");
+  const empty = document.getElementById("adm-edu-empty");
+  if (rows.length === 0) { body.innerHTML = ""; empty.style.display = "block"; return; }
+  empty.style.display = "none";
+  body.innerHTML = rows.map(r => `
+    <tr>
+      <td>${(r.profiles && r.profiles.name) || "-"}</td>
+      <td>${r.course_name || "-"}</td>
+      <td>${fmtDate(r.period_start)} ~ ${fmtDate(r.period_end)}</td>
+      <td>${r.total_hours ?? "-"}</td>
+      <td>${r.capacity ?? "-"}</td>
+      <td>${r.tuition != null ? Number(r.tuition).toLocaleString("ko-KR") + "원" : "-"}</td>
+      <td>${r.syllabus_path ? `<a href="#" onclick="downloadSyllabus('${r.syllabus_path}'); return false;">다운로드</a>` : "-"}</td>
+      <td>${fmtDate(r.report_date)}</td>
+    </tr>
+  `).join("");
+}
+
+async function loadInstructors(){
+  const { data } = await sb.from("profiles").select("name, email, created_at").eq("role", "instructor").order("created_at", { ascending: false });
+  document.getElementById("adm-instructors-body").innerHTML = (data || []).map(i => `
+    <tr><td>${i.name || "-"}</td><td>${i.email}</td><td>${(i.created_at || "").slice(0, 10)}</td></tr>
+  `).join("");
+}
+
+// ================= 초기화 =================
+(async function init(){
+  await initCertificateForm();
+  await refreshAuthState();
+
+  if (window.location.hash.includes("type=recovery")) {
+    showView("reset");
+  } else {
+    showView("certificate");
+  }
 })();
 </script>
 </body>
