@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>교육신고서 · 2급자격과정 강사행정</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<header class="site" id="site-header"></header>
+
+<main>
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <span class="eyebrow">서식 제1호</span>
+        <h1>2급자격과정 교육신고서</h1>
+        <p>강사가 2급자격과정 개설을 신고하기 위한 서식입니다. 제출한 내용은 관리자 확인페이지에서 조회됩니다.</p>
+      </div>
+    </div>
+
+    <div id="msg" class="msg"></div>
+
+    <form id="report-form">
+      <div class="section-label"><span class="bar"></span><span>1. 신고자(강사) 정보</span></div>
+      <div class="field-grid">
+        <div class="field"><label>성명<span class="req">*</span></label><input id="f-name" type="text" required></div>
+        <div class="field"><label>생년월일</label><input id="f-dob" type="date"></div>
+        <div class="field"><label>연락처<span class="req">*</span></label><input id="f-phone" type="tel" placeholder="010-0000-0000" required></div>
+        <div class="field"><label>이메일</label><input id="f-email" type="email"></div>
+      </div>
+
+      <div class="section-label"><span class="bar"></span><span>2. 교육과정 정보</span></div>
+      <div class="field-grid">
+        <div class="field span2"><label>과정명<span class="req">*</span></label><input id="f-course" type="text" required></div>
+        <div class="field"><label>교육기간(시작)</label><input id="f-start" type="date"></div>
+        <div class="field"><label>교육기간(종료)</label><input id="f-end" type="date"></div>
+        <div class="field"><label>총 교육시간(시간)</label><input id="f-hours" type="number" min="0"></div>
+      </div>
+
+      <div class="section-label"><span class="bar"></span><span>3. 모집 정보</span></div>
+      <div class="field-grid">
+        <div class="field"><label>모집인원(명)</label><input id="f-capacity" type="number" min="0"></div>
+        <div class="field"><label>수강료(원)</label><input id="f-tuition" type="number" min="0"></div>
+      </div>
+
+      <div class="section-label"><span class="bar"></span><span>4. 교안 첨부</span></div>
+      <div class="field-grid single">
+        <div class="field">
+          <label>교안 파일</label>
+          <input id="f-syllabus" type="file" accept=".pdf,.ppt,.pptx,.doc,.docx,.hwp,.hwpx">
+          <span class="hint">PDF, PPT, Word, 한글 파일을 첨부할 수 있습니다.</span>
+        </div>
+      </div>
+
+      <div class="sign-row">
+        <div class="field"><label>신고일자</label><input id="f-report-date" type="date" required></div>
+      </div>
+
+      <div class="btn-row">
+        <button type="submit" class="btn primary" id="submit-btn">교육신고서 제출</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card" style="margin-top:24px;">
+    <div class="section-label" style="margin-top:0;"><span class="bar"></span><span>최근 제출 내역</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>과정명</th><th>교육기간</th><th>총시간</th><th>모집인원</th><th>수강료</th><th>교안</th><th>신고일자</th></tr></thead>
+        <tbody id="history-body"></tbody>
+      </table>
+    </div>
+    <div id="history-empty" class="empty" style="display:none;">아직 제출한 교육신고서가 없습니다.</div>
+  </div>
+</main>
+
+<footer class="site">2급자격과정 강사행정 시스템</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/config.js"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/auth.js"></script>
+<script>
+(async function(){
+  const { user, profile } = await requireAuth();
+  initNav("report.html", profile);
+
+  document.getElementById("f-name").value = (profile && profile.name) || "";
+  document.getElementById("f-email").value = (profile && profile.email) || "";
+  document.getElementById("f-report-date").value = new Date().toISOString().slice(0, 10);
+
+  const msg = document.getElementById("msg");
+  const historyBody = document.getElementById("history-body");
+  const historyEmpty = document.getElementById("history-empty");
+
+  function fmtMoney(n){ return n == null ? "-" : Number(n).toLocaleString("ko-KR") + "원"; }
+  function fmtDate(d){ return d || "-"; }
+
+  async function loadHistory(){
+    const { data, error } = await sb
+      .from("education_reports")
+      .select("course_name, period_start, period_end, total_hours, capacity, tuition, syllabus_path, report_date")
+      .eq("instructor_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (error || !data || data.length === 0) {
+      historyBody.innerHTML = "";
+      historyEmpty.style.display = "block";
+      return;
+    }
+    historyEmpty.style.display = "none";
+    historyBody.innerHTML = data.map(r => `
+      <tr>
+        <td>${r.course_name || "-"}</td>
+        <td>${fmtDate(r.period_start)} ~ ${fmtDate(r.period_end)}</td>
+        <td>${r.total_hours ?? "-"}</td>
+        <td>${r.capacity ?? "-"}</td>
+        <td>${fmtMoney(r.tuition)}</td>
+        <td>${r.syllabus_path ? "첨부됨" : "-"}</td>
+        <td>${fmtDate(r.report_date)}</td>
+      </tr>
+    `).join("");
+  }
+
+  document.getElementById("report-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    hideMsg(msg);
+    const submitBtn = document.getElementById("submit-btn");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "제출 중...";
+
+    try {
+      let syllabusPath = null;
+      const file = document.getElementById("f-syllabus").files[0];
+      if (file) {
+        const path = `${user.id}/${Date.now()}-${file.name}`;
+        const { error: upErr } = await sb.storage.from("syllabus").upload(path, file);
+        if (upErr) throw upErr;
+        syllabusPath = path;
+      }
+
+      const row = {
+        instructor_id: user.id,
+        course_name: document.getElementById("f-course").value.trim(),
+        period_start: document.getElementById("f-start").value || null,
+        period_end: document.getElementById("f-end").value || null,
+        total_hours: document.getElementById("f-hours").value || null,
+        capacity: document.getElementById("f-capacity").value || null,
+        tuition: document.getElementById("f-tuition").value || null,
+        syllabus_path: syllabusPath,
+        report_date: document.getElementById("f-report-date").value,
+      };
+      const { error } = await sb.from("education_reports").insert(row);
+      if (error) throw error;
+
+      let sheetNote = "";
+      try {
+        const { data: sessionData } = await sb.auth.getSession();
+        const sheetRes = await fetch("/api/log-report-to-sheet", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: "Bearer " + sessionData.session.access_token },
+          body: JSON.stringify({
+            instructorName: (profile && profile.name) || document.getElementById("f-name").value,
+            courseName: row.course_name,
+            periodStart: row.period_start,
+            periodEnd: row.period_end,
+            totalHours: row.total_hours,
+            capacity: row.capacity,
+            tuition: row.tuition,
+            syllabusFilename: file ? file.name : "",
+            reportDate: row.report_date,
+          }),
+        });
+        if (!sheetRes.ok) sheetNote = " (구글시트 기록은 실패했지만 신고서 제출은 완료되었습니다)";
+      } catch (sheetErr) {
+        sheetNote = " (구글시트 기록은 실패했지만 신고서 제출은 완료되었습니다)";
+      }
+
+      showMsg(msg, "교육신고서가 제출되었습니다." + sheetNote, "success");
+      document.getElementById("report-form").reset();
+      document.getElementById("f-name").value = (profile && profile.name) || "";
+      document.getElementById("f-email").value = (profile && profile.email) || "";
+      document.getElementById("f-report-date").value = new Date().toISOString().slice(0, 10);
+      loadHistory();
+    } catch (err) {
+      showMsg(msg, "제출 실패: " + (err.message || err), "error");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "교육신고서 제출";
+    }
+  });
+
+  loadHistory();
+})();
+</script>
+</body>
+</html>

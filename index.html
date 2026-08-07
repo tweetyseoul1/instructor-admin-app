@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>2급자격과정 강사행정</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<main class="narrow" style="padding-top:100px; text-align:center;">
+  <div class="loading">이동 중...</div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/config.js"></script>
+<script src="js/supabaseClient.js"></script>
+<script>
+(async function(){
+  const { data } = await sb.auth.getSession();
+  window.location.href = data.session ? "admin.html" : "login.html";
+})();
+</script>
+</body>
+</html>
