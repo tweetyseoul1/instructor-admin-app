@@ -14,7 +14,6 @@
 2. `js/config.js`에 Project URL과 anon public key를 입력합니다.
 3. Vercel 프로젝트에 아래 서버 환경변수를 등록합니다.
    - `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
-   - `OPERATOR_SIGNUP_CODE` (운영자 가입용 비공개 등록코드)
    - `GOOGLE_SERVICE_ACCOUNT_EMAIL`, `GOOGLE_PRIVATE_KEY`, `GOOGLE_SHEET_ID`
    - 선택: `GOOGLE_SHEET_RANGE` (기본값 `교육신고!A:J`)
    - 선택: `GOOGLE_APPLICATION_SHEET_RANGE` (기본값 `수료자격신청!A:K`)
