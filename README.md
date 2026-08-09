@@ -6,10 +6,7 @@
 
 `index.html`을 열거나 `npm install && npm start`를 실행합니다.
 
-- 운영자: `admin@baeumon.kr` / `admin123`
-- 강사: `teacher@baeumon.kr` / `teacher123`
-
-미리보기 데이터는 현재 브라우저의 localStorage에만 저장됩니다. 실제 개인정보를 입력하지 마세요.
+미리보기 데이터는 현재 브라우저의 localStorage에만 저장됩니다. 공개 코드에는 로그인 아이디나 비밀번호가 포함되지 않으며, 실제 계정 기능은 Supabase 연결 후 활성화됩니다.
 
 ## 실제 운영 연결
 
