@@ -19,8 +19,10 @@
    - `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
    - `GOOGLE_SERVICE_ACCOUNT_EMAIL`, `GOOGLE_PRIVATE_KEY`, `GOOGLE_SHEET_ID`
    - 선택: `GOOGLE_SHEET_RANGE` (기본값 `교육신고!A:J`)
+   - 선택: `GOOGLE_APPLICATION_SHEET_RANGE` (기본값 `수료자격신청!A:K`)
 4. Google Sheet의 `교육신고` 탭 1행에 `제출시각, 강사명, 연락처, 과정명, 시작일, 종료일, 교육시간, 수강인원, PPT파일명, 로그인계정` 헤더를 만듭니다.
 5. 해당 시트를 Google 서비스 계정 이메일에 편집자 권한으로 공유합니다.
+   - 신청자 목록을 연동하려면 `수료자격신청` 탭을 추가합니다.
 6. Supabase Authentication에서 운영자 계정을 만든 후 `profiles.role`을 `admin`으로 변경합니다. 강사 계정은 운영자 화면의 강사 등록 기능으로 초대합니다.
 
 비밀키와 계좌번호 전체를 공개 HTML이나 구글시트에 저장하지 마세요. 계좌정보는 Supabase RLS로 보호하며, 수강자 화면에는 선택한 강사의 입금 안내 용도로만 표시됩니다.
