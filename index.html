@@ -64,6 +64,11 @@
       <form id="instructor-signup-form" class="form-card login-card auth-form hidden"><label>성명<input name="name" required autocomplete="name"></label><label>강사 아이디(이메일)<input name="email" type="email" required autocomplete="email"></label><label>비밀번호<input name="password" type="password" minlength="8" required autocomplete="new-password"></label><label>비밀번호 확인<input name="passwordConfirm" type="password" minlength="8" required autocomplete="new-password"></label><label>연락처<input name="phone" type="tel" required autocomplete="tel"></label><label>은행명<input name="bankName" required></label><label>계좌번호<input name="bankAccount" required autocomplete="off"></label><label>예금주<input name="accountHolder" required></label><button class="btn primary submit">강사 계정 만들기</button><p class="form-message" id="instructor-signup-message"></p><div class="security-note">가입 후 바로 로그인할 수 있으며, 비밀번호 찾기 때만 이메일을 사용합니다.</div></form>
     </section>
 
+    <section id="reset-password" class="page form-page login-page">
+      <div class="page-head"><span class="kicker">PASSWORD RESET</span><h1>새 비밀번호 설정</h1><p>비밀번호 찾기 메일의 링크로 들어온 뒤 새로운 비밀번호를 저장하세요.</p></div>
+      <form id="reset-password-form" class="form-card login-card"><label>새 비밀번호<input name="password" type="password" minlength="8" required autocomplete="new-password"></label><label>새 비밀번호 확인<input name="passwordConfirm" type="password" minlength="8" required autocomplete="new-password"></label><button class="btn primary submit">새 비밀번호 저장하기</button><p class="form-message" id="reset-password-message"></p></form>
+    </section>
+
     <section id="report" class="page form-page">
       <div class="page-head"><span class="kicker">INSTRUCTOR REPORT</span><h1>교육신고서</h1><p>소속·자격·교육장소·서명 항목은 제외하고 꼭 필요한 내용만 받습니다.</p></div>
       <form id="report-form" class="form-card">
